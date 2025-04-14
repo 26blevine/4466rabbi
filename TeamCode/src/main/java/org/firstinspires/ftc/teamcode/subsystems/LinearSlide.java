@@ -126,8 +126,7 @@ public class LinearSlide {
         motorR.setPower(clipped);
     }
 
-    private void moveTo() {
-        // 1) Manual override from triggers if either > 0.1
+    private void manualMove(){
         double r = gp.getTrigger(1, "right_trigger");
         double l = gp.getTrigger(1, "left_trigger");
         double delta = r - l; // positive -> up, negative -> down
@@ -137,8 +136,11 @@ public class LinearSlide {
             // Because currentPos is read each loop, this effectively keeps pushing the target.
             int increment = (int)(delta * manualK);
             setTarget(getTarget() + increment);
+            setState(State.MOVING);
         }
+    }
 
+    private void moveTo() {
         // safety check for top limit
         if (Math.abs(maxHeight - currentPos) < safetyDistance) {
             idle();
@@ -188,7 +190,7 @@ public class LinearSlide {
     public void update() {
         currentPos = motorL.getCurrentPosition();
         reset();
-
+        manualMove();
         switch (currentState) {
             case IDLE:
                 setPowers(0);

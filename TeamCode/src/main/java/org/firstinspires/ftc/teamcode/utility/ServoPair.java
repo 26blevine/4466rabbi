@@ -29,4 +29,14 @@ public class ServoPair {
     public boolean isUsingA() {
         return useAForPosition;
     }
+
+    /**
+     * Returns true if the servo position is within the tolerance of the target.
+     * @param target target position to check against.
+     * @param tolerance acceptable range around the target.
+     * @return true if current position is within [target - tolerance, target + tolerance]
+     */
+    public boolean isAtPosition(double target, double tolerance) {
+        return Math.abs(getPosition() - target) <= tolerance;
+    }
 }
