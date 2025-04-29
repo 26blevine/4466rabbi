@@ -56,7 +56,6 @@ public class DriveBase {
     }
 
     public void teleop(boolean f) {
-
         setFieldCentric(f);
         getTeleopMovement();
         follower.setStartingPose(robot.getPoseEstimate());
@@ -69,7 +68,6 @@ public class DriveBase {
         autoPath = new Path(new BezierCurve(new Point(currentPose), new Point(target)));
         autoPath.setLinearHeadingInterpolation(currentPose.getHeading(), target.getHeading());
         setState(State.AUTONOMOUS);
-
     }
 
     public State getCurrentState() {
@@ -78,6 +76,10 @@ public class DriveBase {
 
     public Pose getPos(){
         return follower.getPose();
+    }
+
+    public boolean isFollowing(){
+        return follower.isBusy();
     }
 
     public boolean isMoving() {
