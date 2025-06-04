@@ -57,8 +57,8 @@ public class DriveBase {
 
     public void teleop(boolean f) {
         setFieldCentric(f);
-        getTeleopMovement();
         follower.setStartingPose(robot.getPoseEstimate());
+        follower.startTeleopDrive();
         setState(State.TELEOP);
     }
 
@@ -133,7 +133,7 @@ public class DriveBase {
                 }
                 break;
             case TELEOP:
-                follower.startTeleopDrive();
+                getTeleopMovement();
                 break;
             default:
                 // just in case we get an invalid state
