@@ -26,7 +26,7 @@ public class Robot {
     public DcMotor slideMotorLeft, slideMotorRight, frontLeft, backLeft, frontRight, backRight;
     public HardwareMap hardwareMap;
     public GoBildaPinpointDriver pinpointDriver;
-    public Follower follower;
+//    public Follower follower;
 
     public Robot(HardwareMap map) {
 
@@ -39,6 +39,9 @@ public class Robot {
         this.backLeft = map.get(DcMotor.class, "backLeft");
         this.frontRight = map.get(DcMotor.class, "frontRight");
         this.backRight = map.get(DcMotor.class, "backRight");
+
+        backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
 
         slideMotorLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         slideMotorRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -56,10 +59,9 @@ public class Robot {
         slideMotorLeft.setDirection(DcMotorSimple.Direction.REVERSE);
 
         try {
-            pinpointDriver = getDevice(GoBildaPinpointDriver.class, "odo");
-            pinpointDriver.setOffsets(X_OFFSET, Y_OFFSET);
-            pinpointDriver.resetPosAndIMU();
-            follower = new Follower(hardwareMap, FConstants.class, LConstants.class);
+//            pinpointDriver = getDevice(GoBildaPinpointDriver.class, "odo");
+//            pinpointDriver.setOffsets(X_OFFSET, Y_OFFSET);
+//            pinpointDriver.resetPosAndIMU();
         } catch (Exception e) {
         }
     }

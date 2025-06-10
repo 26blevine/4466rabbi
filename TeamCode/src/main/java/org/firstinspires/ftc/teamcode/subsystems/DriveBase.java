@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
+import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
+
 import com.pedropathing.localization.Pose;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.localization.Pose;
@@ -15,6 +17,8 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 //import pedroPathing.constants.FConstants;
 //import pedroPathing.constants.LConstants;
 
+import org.firstinspires.ftc.teamcode.pedroPathing.constants.FConstants;
+import org.firstinspires.ftc.teamcode.pedroPathing.constants.LConstants;
 import org.firstinspires.ftc.teamcode.utility.GamepadPair;
 
 public class DriveBase {
@@ -48,11 +52,11 @@ public class DriveBase {
         setState(State.HOLD);
     }
 
-    public void getTeleopMovement() {
-        double x = gamepadPair.joystickValue(1, "left", "x");
-        double y = gamepadPair.joystickValue(1, "left", "y");
+    private void getTeleopMovement() {
+        double x = gamepadPair.joystickValue(1, "left", "y");
+        double y = gamepadPair.joystickValue(1, "left", "x");
         double heading = gamepadPair.joystickValue(1, "right", "x");
-        follower.setTeleOpMovementVectors(x, y, heading, !fieldCentric);
+        follower.setTeleOpMovementVectors(-x, -y, -heading, !fieldCentric);
     }
 
     public void teleop(boolean f) {
@@ -105,7 +109,7 @@ public class DriveBase {
 
     public DriveBase(Robot r, GamepadPair gp) {
         this.robot = r;
-        this.follower = robot.follower;
+        this.follower = new Follower(robot.hardwareMap, FConstants.class, LConstants.class);
         this.gamepadPair = gp;
         this.currentState = State.IDLE;
     }
