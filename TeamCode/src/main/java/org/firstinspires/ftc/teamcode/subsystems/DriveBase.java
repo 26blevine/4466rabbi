@@ -1,25 +1,17 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
-
-import com.pedropathing.localization.Pose;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.localization.Pose;
 import com.pedropathing.pathgen.BezierCurve;
-import com.pedropathing.pathgen.BezierLine;
 import com.pedropathing.pathgen.Path;
-import com.pedropathing.pathgen.PathChain;
 import com.pedropathing.pathgen.Point;
-import com.pedropathing.util.Timer;
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 //import pedroPathing.constants.FConstants;
 //import pedroPathing.constants.LConstants;
 
 import org.firstinspires.ftc.teamcode.pedroPathing.constants.FConstants;
 import org.firstinspires.ftc.teamcode.pedroPathing.constants.LConstants;
-import org.firstinspires.ftc.teamcode.utility.GamepadPair;
+import org.firstinspires.ftc.teamcode.utility.Gpad;
 
 public class DriveBase {
 
@@ -34,10 +26,12 @@ public class DriveBase {
     //private objects
     private State currentState;
     private Robot robot;
-    private GamepadPair gamepadPair;
+    private Gpad gp1;
+    private Gpad gp2;
     private boolean fieldCentric, holdPathEnd;
     private Path autoPath;
     private Follower follower;
+    private Pose currentPose;
 
     //setters + getters
     private void setState(State s) {
@@ -53,9 +47,9 @@ public class DriveBase {
     }
 
     private void getTeleopMovement() {
-        double x = gamepadPair.joystickValue(1, "left", "x");
-        double y = gamepadPair.joystickValue(1, "left", "y");
-        double heading = gamepadPair.joystickValue(1, "right", "x");
+        double x = gp1.stickLY;
+        double y = gp1.stickLX;
+        double heading = gp1.stickRX;
         follower.setTeleOpMovementVectors(-x, -y, -heading, !fieldCentric);
     }
 
@@ -68,9 +62,21 @@ public class DriveBase {
 
     public void autonomous(Pose target, boolean holdOnEnd) {
         holdPathEnd = holdOnEnd;
-        Pose currentPose = robot.getPoseEstimate();
-        autoPath = new Path(new BezierCurve(new Point(currentPose), new Point(target)));
-        autoPath.setLinearHeadingInterpolation(currentPose.getHeading(), target.getHeading());
+        Pose startPose = robot.getPoseEstimate();
+        autoPath = new Path(new BezierCurve(new Point(startPose), new Point(target)));
+        autoPath.setLinearHeadingInterpolation(startPose.getHeading(), target.getHeading());
+        setState(State.AUTONOMOUS);
+    }
+
+    /**
+     * Starts an autonomous drive using a precomputed path.
+     *
+     * @param path       the path to follow
+     * @param holdOnEnd  whether to hold position when the path completes
+     */
+    public void autonomous(Path path, boolean holdOnEnd) {
+        holdPathEnd = holdOnEnd;
+        autoPath = path;
         setState(State.AUTONOMOUS);
     }
 
@@ -79,7 +85,19 @@ public class DriveBase {
     }
 
     public Pose getPos(){
-        return follower.getPose();
+        return currentPose;
+    }
+
+    public double getX() {
+        return currentPose.getX();
+    }
+
+    public double getY() {
+        return currentPose.getY();
+    }
+
+    public double getH() {
+        return currentPose.getHeading();
     }
 
     public boolean isFollowing(){
@@ -107,17 +125,20 @@ public class DriveBase {
     }
 
 
-    public DriveBase(Robot r, GamepadPair gp) {
+    public DriveBase(Robot r, Gpad g1, Gpad g2) {
         this.robot = r;
         this.follower = new Follower(robot.hardwareMap, FConstants.class, LConstants.class);
-        this.gamepadPair = gp;
+        this.gp1 = g1;
+        this.gp2 = g2;
         this.currentState = State.IDLE;
+        this.currentPose = robot.getPoseEstimate();
     }
 
 
     public void update() {
 
         follower.update();
+        currentPose = follower.getPose();
 
         switch (currentState) {
             case IDLE:
