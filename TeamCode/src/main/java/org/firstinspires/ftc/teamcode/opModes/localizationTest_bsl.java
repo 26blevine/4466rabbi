@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.opModes;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -12,7 +11,7 @@ import org.firstinspires.ftc.teamcode.utility.GamepadPair;
 
 
 @TeleOp(name = "LocalizationTestBSL 2", group = "Tests")
-public class localizationTest extends LinearOpMode {
+public class localizationTest_bsl extends LinearOpMode {
     Robot robot;
     DriveBase driveBase;
     GamepadPair gp;

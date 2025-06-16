@@ -53,8 +53,8 @@ public class DriveBase {
     }
 
     private void getTeleopMovement() {
-        double x = gamepadPair.joystickValue(1, "left", "y");
-        double y = gamepadPair.joystickValue(1, "left", "x");
+        double x = gamepadPair.joystickValue(1, "left", "x");
+        double y = gamepadPair.joystickValue(1, "left", "y");
         double heading = gamepadPair.joystickValue(1, "right", "x");
         follower.setTeleOpMovementVectors(-x, -y, -heading, !fieldCentric);
     }
