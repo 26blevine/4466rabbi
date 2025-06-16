@@ -47,10 +47,10 @@ public class DriveBase {
     }
 
     private void getTeleopMovement() {
-        double x = gp1.stickLY;
-        double y = gp1.stickLX;
-        double heading = gp1.stickRX;
-        follower.setTeleOpMovementVectors(-x, -y, -heading, !fieldCentric);
+        double x = -gp1.stickLY;
+        double y = -gp1.stickLX;
+        double heading = -gp1.stickRX;
+        follower.setTeleOpMovementVectors(x, y, heading, !fieldCentric);
     }
 
     public void teleop(boolean f) {
@@ -132,6 +132,7 @@ public class DriveBase {
         this.gp2 = g2;
         this.currentState = State.IDLE;
         this.currentPose = follower.getPose();
+        this.fieldCentric = false;
     }
 
 

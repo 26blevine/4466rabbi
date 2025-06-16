@@ -10,8 +10,8 @@ import org.firstinspires.ftc.teamcode.subsystems.Robot;
 import org.firstinspires.ftc.teamcode.utility.Gpad;
 
 
-@TeleOp(name = "LocalizationTestBSL 2", group = "Tests")
-public class localizationTest_bsl extends LinearOpMode {
+@TeleOp(name = "LocalizationTest RobotCentric", group = "Tests")
+public class localizationTest_robotCentric extends LinearOpMode {
     Robot robot;
     DriveBase driveBase;
     Gpad g1;

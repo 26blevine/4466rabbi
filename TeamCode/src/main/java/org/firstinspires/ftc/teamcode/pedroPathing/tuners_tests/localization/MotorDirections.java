@@ -102,6 +102,10 @@ public class MotorDirections extends OpMode {
         telemetryA.addData("Left Rear Motor Direction: ", leftRearMotorDirection);
         telemetryA.addData("Right Front Motor Direction: ", rightFrontMotorDirection);
         telemetryA.addData("Right Rear Motor Direction: ", rightRearMotorDirection);
+        telemetryA.addData("Left Front Motor Name: ", leftFrontMotorName);
+        telemetryA.addData("Left Rear Motor Name: ", leftRearMotorName);
+        telemetryA.addData("Right Front Motor Name: ", rightFrontMotorName);
+        telemetryA.addData("Right Rear Motor Name: ", rightRearMotorName);
         telemetryA.update();
     }
 }
