@@ -27,10 +27,10 @@ public class LinearSlide {
     private int currentPos = 0;
     private int targetPos = 0;
     private int maxHeight = 0;
-    private int safetyDistance = 0;
+    private int safetyDistance = 10;
 
     // K multiplier for manual adjustments
-    private double manualK = 10.0; // default can be changed as desired
+    private double manualRatio = 10.0; // default can be changed as desired
 
     public LinearSlide(DcMotor motorL, DcMotor motorR, GamepadPair gp, TouchSensor magnetSwitch) {
         this.motorL = motorL;
@@ -44,13 +44,12 @@ public class LinearSlide {
         pidfController = new PIDFController(coeffs);
     }
 
-    // Optional getters/setters for manualK
-    public double getManualK() {
-        return manualK;
+    public double getManualRatio() {
+        return manualRatio;
     }
 
-    public void setManualK(double k) {
-        this.manualK = k;
+    public void setManualRatio(double k) {
+        this.manualRatio = k;
     }
 
     private void setState(State newState) {
@@ -134,7 +133,7 @@ public class LinearSlide {
         if (Math.abs(delta) > 0.1) {
             // Let's increment the target by delta * manualK
             // Because currentPos is read each loop, this effectively keeps pushing the target.
-            int increment = (int)(delta * manualK);
+            int increment = (int)(delta * manualRatio);
             setTarget(getTarget() + increment);
             setState(State.MOVING);
         }
@@ -168,21 +167,31 @@ public class LinearSlide {
 
     // private reset method
     private void reset() {
-        // if we do have a magnetSwitch, use it
+        boolean shouldReset = false;
         if (magnetSwitch != null) {
             if (magnetSwitch.isPressed()) {
-                // stop motors
+                shouldReset = magnetSwitch.isPressed();
+            } else if (currentPos <= 0) {
+                shouldReset = true;
+            }
+
+            if (shouldReset) {
+                // stop motors before reconfiguring
                 setPowers(0);
+
                 // reset encoders
                 motorL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 motorR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            }
-        } else {
-            // if switch is null, reset if position <= 0
-            if (currentPos <= 0) {
-                setPowers(0);
-                motorL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                motorR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+                // immediately switch back so PID/teleop can use encoders
+                // (change to RUN_WITHOUT_ENCODER if your design requires it)
+                motorL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                motorR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+                // reset bookkeeping and hold at zero
+                currentPos = 0;
+                targetPos = 0;
+                hold();
             }
         }
     }

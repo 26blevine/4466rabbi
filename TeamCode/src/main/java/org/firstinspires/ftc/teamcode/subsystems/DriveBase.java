@@ -55,14 +55,14 @@ public class DriveBase {
 
     public void teleop(boolean f) {
         setFieldCentric(f);
-        follower.setStartingPose(robot.getPoseEstimate());
+        follower.setStartingPose(currentPose);
         follower.startTeleopDrive();
         setState(State.TELEOP);
     }
 
     public void autonomous(Pose target, boolean holdOnEnd) {
         holdPathEnd = holdOnEnd;
-        Pose startPose = robot.getPoseEstimate();
+        Pose startPose = currentPose;
         autoPath = new Path(new BezierCurve(new Point(startPose), new Point(target)));
         autoPath.setLinearHeadingInterpolation(startPose.getHeading(), target.getHeading());
         setState(State.AUTONOMOUS);
@@ -131,7 +131,7 @@ public class DriveBase {
         this.gp1 = g1;
         this.gp2 = g2;
         this.currentState = State.IDLE;
-        this.currentPose = robot.getPoseEstimate();
+        this.currentPose = follower.getPose();
     }
 
 
@@ -145,7 +145,7 @@ public class DriveBase {
                 // does nothing
                 break;
             case HOLD:
-                follower.holdPoint(robot.getPoseEstimate());
+                follower.holdPoint(currentPose);
                 break;
             case AUTONOMOUS:
                 follower.followPath(autoPath, holdPathEnd);

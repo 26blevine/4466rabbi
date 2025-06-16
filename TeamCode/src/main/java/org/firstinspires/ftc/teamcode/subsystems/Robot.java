@@ -57,24 +57,35 @@ public class Robot {
         backRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         slideMotorLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-
+/*
         try {
 //            pinpointDriver = getDevice(GoBildaPinpointDriver.class, "odo");
 //            pinpointDriver.setOffsets(X_OFFSET, Y_OFFSET);
 //            pinpointDriver.resetPosAndIMU();
         } catch (Exception e) {
         }
+
+ */
     }
 
+    public <T> T getDevice(Class<? extends T> classOfDevice, String deviceName) {
+        T toReturn = null;
+        try {
+            toReturn = hardwareMap.get(classOfDevice, deviceName);
+        } catch (Exception e) {
+        }
+        return toReturn;
+    }
 
-    //If robot breaks, it was this
+   /*
     public void updatePinpoint() {
         if (pinpointDriver == null) {
             return;
         }
         pinpointDriver.update();
     }
-
+*/
+    /*
     public Pose getPoseEstimate() {
         if (pinpointDriver == null) {
             return new Pose(0, 0, 0);
@@ -86,7 +97,8 @@ public class Robot {
         double heading = pos.getHeading();
         return new Pose(x, y, heading);
     }
-
+*/
+    /*
     public void setPoseEstimate(Pose input) {
         if (pinpointDriver == null) {
             return;
@@ -94,14 +106,9 @@ public class Robot {
         pinpointDriver.setPosition(input);
     }
 
-    public <T> T getDevice(Class<? extends T> classOfDevice, String deviceName) {
-        T toReturn = null;
-        try {
-            toReturn = hardwareMap.get(classOfDevice, deviceName);
-        } catch (Exception e) {
-        }
-        return toReturn;
-    }
+
+     */
+
 }
 
 
