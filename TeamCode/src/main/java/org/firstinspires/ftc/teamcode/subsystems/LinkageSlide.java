@@ -22,7 +22,8 @@ public class LinkageSlide {
     private double targetDistance = 0.0;
     private double maximumExtension = 1.0; // Maximum extension distance, scale 0-1 for now
     private double tolerance = 0.01; // Tolerance for position checking
-    private double manualK = 0.005; // Manual jog increment factor
+    // Multiplier for manual jogging adjustments
+    private double manualRatio = 0.005;
 
     // Constants for linkage calculations
     private static final double vertOffset = 2.0;
@@ -92,12 +93,12 @@ public class LinkageSlide {
         this.maximumExtension = maximumExtension;
     }
 
-    public double getManualK() {
-        return manualK;
+    public double getManualRatio() {
+        return manualRatio;
     }
 
-    public void setManualK(double manualK) {
-        this.manualK = manualK;
+    public void setManualRatio(double manualRatio) {
+        this.manualRatio = manualRatio;
     }
 
     private void manualMove(){
@@ -106,7 +107,7 @@ public class LinkageSlide {
         double delta = r - l; // Positive -> extend, Negative -> retract
 
         if (Math.abs(delta) > 0.1) {
-            double increment = delta * manualK;
+            double increment = delta * manualRatio;
             targetDistance = Math.max(0.0, Math.min(targetDistance + increment, maximumExtension));
             targetPosition = calcTargetPosition(targetDistance);
             setState(State.MOVING);
@@ -139,7 +140,7 @@ public class LinkageSlide {
  * - Limit switch is optional; if provided, used for basic homing/safety checks.
  * - In the future: add hard stops based on limit switch triggers.
  * - Allow resetting servo zero if limit is hit.
- * - ManualK, Precision, MaximumExtension could be adjustable via dashboard.
+ * - manualRatio, Precision, MaximumExtension could be adjustable via dashboard.
  * - Could later integrate soft start/stop ramps to prevent mechanical jerks.
  * - Added tolerance for smarter idling and separated calculation logic for flexibility.
  * - Updated position checking to use ServoPair.isAtPosition() for cleaner logic.

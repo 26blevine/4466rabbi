@@ -29,6 +29,9 @@ public class LinearSlide {
     private int maxHeight = 0;
     private int safetyDistance = 10;
 
+    // Track the previous state of the magnet switch so we only reset once per press
+    private boolean wasMagnetPressed = false;
+
     // K multiplier for manual adjustments
     private double manualRatio = 10.0; // default can be changed as desired
 
@@ -99,7 +102,8 @@ public class LinearSlide {
     }
 
     public void setTarget(int target) {
-        this.targetPos = target;
+        // Clamp the requested target within the valid range of the slide
+        this.targetPos = Math.max(0, Math.min(target, maxHeight));
     }
 
     public int getMaxHeight() {
@@ -131,8 +135,8 @@ public class LinearSlide {
         double delta = r - l; // positive -> up, negative -> down
         // Only override if abs(delta) > 0.1
         if (Math.abs(delta) > 0.1) {
-            // Let's increment the target by delta * manualK
-            // Because currentPos is read each loop, this effectively keeps pushing the target.
+            // Increment the target by delta * manualRatio so repeated input gradually adjusts
+            // the desired position while the PID controller handles movement.
             int increment = (int)(delta * manualRatio);
             setTarget(getTarget() + increment);
             setState(State.MOVING);
@@ -140,9 +144,10 @@ public class LinearSlide {
     }
 
     private void moveTo() {
-        // safety check for top limit
-        if (Math.abs(maxHeight - currentPos) < safetyDistance) {
-            idle();
+        // Prevent driving upward past the top limit but still allow downward motion
+        if (currentPos >= maxHeight - safetyDistance && targetPos > currentPos) {
+            targetPos = maxHeight;
+            hold();
             return;
         }
 
@@ -166,11 +171,11 @@ public class LinearSlide {
     }
 
     // private reset method
-    private void reset() {
+    private void reset(boolean magnetPressed) {
         boolean shouldReset = false;
         if (magnetSwitch != null) {
-            if (magnetSwitch.isPressed()) {
-                shouldReset = magnetSwitch.isPressed();
+            if (magnetPressed && !wasMagnetPressed) {
+                shouldReset = true;
             } else if (currentPos <= 0) {
                 shouldReset = true;
             }
@@ -194,11 +199,14 @@ public class LinearSlide {
                 hold();
             }
         }
+        // remember current switch state for next loop
+        wasMagnetPressed = magnetPressed;
     }
 
     public void update() {
         currentPos = motorL.getCurrentPosition();
-        reset();
+        boolean magnetPressed = magnetSwitch != null && magnetSwitch.isPressed();
+        reset(magnetPressed);
         manualMove();
         switch (currentState) {
             case IDLE:
@@ -224,10 +232,10 @@ public class LinearSlide {
 /*
 Additional Information:
 
-- We introduced a manualK variable (defaults to 10.0) that scales how many encoder ticks are added per loop.
+- The manualRatio variable (defaults to 10.0) scales how many encoder ticks are added per loop.
 - In moveTo(), we read the difference between Right Trigger (up) and Left Trigger (down). If abs(delta) > 0.1,
-  we modify the current target by adding an increment = (delta * manualK). This way we can override the slide's power
-  by raising the target mid-flight without resetting it.
+  we modify the current target by adding an increment = (delta * manualRatio). This lets the driver nudge the slide
+  while the PID controller handles smooth motion.
 - The rest of the moveTo() logic remains, so the PID aims for the new target.
 - This approach allows partial pressing of triggers to raise or lower the slide gradually.
 - If no triggers are pressed, the slide just continues to move to the previously set target.
