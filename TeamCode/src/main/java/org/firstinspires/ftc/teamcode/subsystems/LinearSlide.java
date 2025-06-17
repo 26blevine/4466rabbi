@@ -176,7 +176,7 @@ public class LinearSlide {
         if (magnetSwitch != null) {
             if (magnetPressed && !wasMagnetPressed) {
                 shouldReset = true;
-            } else if (currentPos <= 0) {
+            } else if (currentPos < 0) {
                 shouldReset = true;
             }
 
