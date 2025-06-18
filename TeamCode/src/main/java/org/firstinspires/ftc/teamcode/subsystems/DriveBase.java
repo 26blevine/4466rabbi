@@ -13,7 +13,10 @@ import org.firstinspires.ftc.teamcode.pedroPathing.constants.FConstants;
 import org.firstinspires.ftc.teamcode.pedroPathing.constants.LConstants;
 import org.firstinspires.ftc.teamcode.utility.Gpad;
 
-public class DriveBase {
+/**
+ * Drive subsystem responsible for robot locomotion.
+ */
+public class DriveBase implements Subsystem {
 
     private enum State {
         IDLE,
@@ -136,6 +139,7 @@ public class DriveBase {
     }
 
 
+    @Override
     public void update() {
 
         follower.update();
@@ -165,6 +169,17 @@ public class DriveBase {
                 // just in case we get an invalid state
                 break;
         }
+    }
+
+    /**
+     * Returns the completion percentage of the current action.
+     *
+     * TODO: Determine how to calculate this based on follower/path state.
+     */
+    @Override
+    public double getCompletion() {
+        // Placeholder value until completion logic is defined.
+        return 0.0;
     }
 
 }
