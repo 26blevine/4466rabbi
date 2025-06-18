@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.TouchSensor;
 
 import org.firstinspires.ftc.teamcode.utility.GamepadPair;
 
-public class LinearSlide {
+public class LinearSlide_Old {
 
     private enum State {
         IDLE,
@@ -35,7 +35,7 @@ public class LinearSlide {
     // K multiplier for manual adjustments
     private double manualRatio = 10.0; // default can be changed as desired
 
-    public LinearSlide(DcMotor motorL, DcMotor motorR, GamepadPair gp, TouchSensor magnetSwitch) {
+    public LinearSlide_Old(DcMotor motorL, DcMotor motorR, GamepadPair gp, TouchSensor magnetSwitch) {
         this.motorL = motorL;
         this.motorR = motorR;
         this.gp = gp;
