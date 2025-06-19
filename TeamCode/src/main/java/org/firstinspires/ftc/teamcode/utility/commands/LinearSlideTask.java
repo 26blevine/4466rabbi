@@ -1,13 +1,14 @@
 package org.firstinspires.ftc.teamcode.utility.commands;
 
+import org.firstinspires.ftc.teamcode.subsystems.LinearSlide_Test;
 import org.firstinspires.ftc.teamcode.subsystems.old.LinearSlide_Old;
 
 public class LinearSlideTask extends Task {
 
-    private final LinearSlide_Old slide;
+    private final LinearSlide_Test slide;
     private final int target;
 
-    public LinearSlideTask(LinearSlide_Old slide, int target) {
+    public LinearSlideTask(LinearSlide_Test slide, int target) {
         this.slide = slide;
         this.target = target;
         this.name = "LinearSlideTask to position " + target;
@@ -25,6 +26,6 @@ public class LinearSlideTask extends Task {
 
     @Override
     public boolean shouldTerminate() {
-        return !slide.isMoving();
+        return slide.getCompletion()==1.0;
     }
 }
