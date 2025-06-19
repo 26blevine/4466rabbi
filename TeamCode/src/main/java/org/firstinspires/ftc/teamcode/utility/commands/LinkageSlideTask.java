@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.utility.commands;
 
-import org.firstinspires.ftc.teamcode.subsystems.LinkageSlide;
-import org.firstinspires.ftc.teamcode.utility.Task;
+import org.firstinspires.ftc.teamcode.subsystems.old.LinkageSlide;
 
 class LinkageSlideTask extends Task {
 

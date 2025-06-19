@@ -289,8 +289,7 @@ public class LinearSlide_Test implements Subsystem {
 
     @Override
     public double getCompletion() {
-        // TODO: Determine an appropriate completion metric for this subsystem.
-        // For now, we simply return 0.
+        // TODO: implement completion tracking
         return 0;
     }
 }

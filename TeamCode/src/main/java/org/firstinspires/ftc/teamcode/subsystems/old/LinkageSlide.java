@@ -1,5 +1,5 @@
 // --- New Linear Servo Slide Subsystem ---
-package org.firstinspires.ftc.teamcode.subsystems;
+package org.firstinspires.ftc.teamcode.subsystems.old;
 
 import com.qualcomm.robotcore.hardware.TouchSensor;
 import org.firstinspires.ftc.teamcode.utility.ServoPair;

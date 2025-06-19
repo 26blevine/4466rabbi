@@ -178,8 +178,8 @@ public class DriveBase implements Subsystem {
      */
     @Override
     public double getCompletion() {
-        // Placeholder value until completion logic is defined.
-        return 0.0;
+        // TODO: implement completion tracking
+        return 0;
     }
 
 }

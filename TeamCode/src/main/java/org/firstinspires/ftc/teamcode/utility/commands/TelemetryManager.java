@@ -1,12 +1,9 @@
-package org.firstinspires.ftc.teamcode.utility;
+package org.firstinspires.ftc.teamcode.utility.commands;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
-import java.util.function.BooleanSupplier;
 
 // Centralized telemetry manager to control and filter logs
 class TelemetryManager {

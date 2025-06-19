@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.utility.commands;
 
-import org.firstinspires.ftc.teamcode.subsystems.LinearSlide_Old;
-import org.firstinspires.ftc.teamcode.utility.Task;
+import org.firstinspires.ftc.teamcode.subsystems.old.LinearSlide_Old;
 
 public class LinearSlideTask extends Task {
 

@@ -71,10 +71,8 @@ public class Arm implements Subsystem {
 
     @Override
     public double getCompletion() {
-        if (target == previousTarget) {
-            return 1.0;
-        }
-        return Math.abs(target - previousTarget) / 100.0;
+        // TODO: implement completion tracking
+        return 0;
     }
 }
 
