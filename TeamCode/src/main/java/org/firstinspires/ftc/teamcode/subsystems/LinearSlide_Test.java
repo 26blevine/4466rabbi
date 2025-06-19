@@ -12,7 +12,7 @@ import org.firstinspires.ftc.teamcode.utility.Gpad;
  * manually. Encoders are reset automatically when the bottom magnet switch is
  * triggered.
  */
-public class LinearSlide_Test {
+public class LinearSlide_Test implements Subsystem {
 
     /** Operating states for the slide. */
     private enum State { IDLE, MOVING, HOLD, RESET }
@@ -285,6 +285,13 @@ public class LinearSlide_Test {
         pidfController.updatePosition(currentPos);
         double output = pidfController.runPIDF();
         setSpeed(output);
+    }
+
+    @Override
+    public double getCompletion() {
+        // TODO: Determine an appropriate completion metric for this subsystem.
+        // For now, we simply return 0.
+        return 0;
     }
 }
 
