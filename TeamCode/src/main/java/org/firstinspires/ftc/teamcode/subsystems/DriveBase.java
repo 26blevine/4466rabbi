@@ -1,10 +1,14 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
+import static com.pedropathing.pathgen.MathFunctions.distance;
+
 import com.pedropathing.follower.Follower;
 import com.pedropathing.localization.Pose;
 import com.pedropathing.pathgen.BezierCurve;
 import com.pedropathing.pathgen.Path;
 import com.pedropathing.pathgen.Point;
+import com.pedropathing.*;
+import com.pedropathing.pathgen.MathFunctions;
 
 //import pedroPathing.constants.FConstants;
 //import pedroPathing.constants.LConstants;
@@ -25,7 +29,6 @@ public class DriveBase implements Subsystem {
         TELEOP
     }
 
-
     //private objects
     private State currentState;
     private Robot robot;
@@ -35,6 +38,13 @@ public class DriveBase implements Subsystem {
     private Path autoPath;
     private Follower follower;
     private Pose currentPose;
+
+    private double toleranceX = 0.2;
+    private double toleranceY = 0.2;
+    private double toleranceH = 0.2;
+
+    private Pose startPose;
+    private Pose targetPose;
 
     //setters + getters
     private void setState(State s) {
@@ -65,9 +75,10 @@ public class DriveBase implements Subsystem {
 
     public void autonomous(Pose target, boolean holdOnEnd) {
         holdPathEnd = holdOnEnd;
-        Pose startPose = currentPose;
-        autoPath = new Path(new BezierCurve(new Point(startPose), new Point(target)));
-        autoPath.setLinearHeadingInterpolation(startPose.getHeading(), target.getHeading());
+        startPose = currentPose;
+        targetPose = target;
+        autoPath = new Path(new BezierCurve(new Point(startPose), new Point(targetPose)));
+        autoPath.setLinearHeadingInterpolation(startPose.getHeading(), targetPose.getHeading());
         setState(State.AUTONOMOUS);
     }
 
@@ -77,8 +88,10 @@ public class DriveBase implements Subsystem {
      * @param path       the path to follow
      * @param holdOnEnd  whether to hold position when the path completes
      */
-    public void autonomous(Path path, boolean holdOnEnd) {
+    public void autonomous(Path path, Pose target, boolean holdOnEnd) {
         holdPathEnd = holdOnEnd;
+        startPose = currentPose;
+        targetPose = target;
         autoPath = path;
         setState(State.AUTONOMOUS);
     }
@@ -126,6 +139,31 @@ public class DriveBase implements Subsystem {
     public boolean isFieldCentric() {
         return this.fieldCentric;
     }
+
+    public void setToleranceX(double toleranceX) {
+        this.toleranceX = toleranceX;
+    }
+
+    public double getToleranceX() {
+        return toleranceX;
+    }
+
+    public void setToleranceY(double toleranceY) {
+        this.toleranceY = toleranceY;
+    }
+
+    public double getToleranceY() {
+        return toleranceY;
+    }
+
+    public void setToleranceH(double toleranceH) {
+        this.toleranceH = toleranceH;
+    }
+
+    public double getToleranceH() {
+        return toleranceH;
+    }
+
 
 
     public DriveBase(Robot r, Gpad g1, Gpad g2) {
@@ -178,8 +216,20 @@ public class DriveBase implements Subsystem {
      */
     @Override
     public double getCompletion() {
-        // TODO: implement completion tracking
-        return 0;
+
+        switch (currentState) {
+            case IDLE:
+            case HOLD:
+                return 1.0;
+            case AUTONOMOUS:
+                double totalDist = MathFunctions.distance(startPose, targetPose);
+                double remaining = MathFunctions.distance(currentPose, targetPose);
+                return 1 - (remaining / totalDist);
+            case TELEOP:
+            default:
+                return 0.0;
+        }
+
     }
 
 }
