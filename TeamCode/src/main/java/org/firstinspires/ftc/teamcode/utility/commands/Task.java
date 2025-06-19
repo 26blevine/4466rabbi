@@ -22,11 +22,6 @@ public abstract class Task {
     // Define when the task is considered finished (example: motor reached target)
     public abstract boolean isFinished();
 
-    // Optional: log to telemetry
-    public void toTelemetry(TelemetryManager telemetryManager) {
-        telemetryManager.log("Task", name + (started ? (finished ? " (finished)" : " (running)") : " (waiting)"));
-    }
-
     // Connects this task to depend on another task finishing first
     public Task then(Task next) {
         next.dependencies.add(this);

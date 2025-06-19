@@ -7,10 +7,8 @@ import java.util.List;
 // Manages running all tasks
 public class TaskRunner {
     private List<Task> activeTasks = new ArrayList<>(); // All tasks currently being processed
-    private TelemetryManager telemetryManager;
 
-    public TaskRunner(TelemetryManager telemetryManager) {
-        this.telemetryManager = telemetryManager;
+    public TaskRunner() {
     }
 
     // Add the first task to start running
@@ -33,8 +31,6 @@ public class TaskRunner {
                 }
             }
 
-            task.toTelemetry(telemetryManager); // Collect telemetry from active tasks
         }
-        telemetryManager.update(); // Push telemetry to driver station once per loop
     }
 }
