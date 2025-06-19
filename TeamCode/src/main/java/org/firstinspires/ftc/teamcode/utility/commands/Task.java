@@ -19,8 +19,8 @@ public abstract class Task {
     // Called repeatedly while running (example: keep updating motor movement)
     public abstract void update();
 
-    // Define when the task is considered finished (example: motor reached target)
-    public abstract boolean isFinished();
+    // Define when the task should terminate (example: motor reached target)
+    public abstract boolean shouldTerminate();
 
     // Connects this task to depend on another task finishing first
     public Task then(Task next) {
@@ -36,11 +36,11 @@ public abstract class Task {
 
     // Internal: Can this task start now? (Are all dependencies finished and condition true?)
     boolean canStart() {
-        return startCondition.getAsBoolean() && dependencies.stream().allMatch(Task::isDone);
+        return startCondition.getAsBoolean() && dependencies.stream().allMatch(Task::isTerminated);
     }
 
-    // Internal: Is this task finished?
-    boolean isDone() {
+    // Internal: Has this task terminated?
+    boolean isTerminated() {
         return finished;
     }
 
