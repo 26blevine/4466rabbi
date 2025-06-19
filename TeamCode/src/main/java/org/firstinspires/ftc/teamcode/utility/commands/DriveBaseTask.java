@@ -27,7 +27,7 @@ class DriveBaseTask extends Task {
     }
 
     @Override
-    public boolean isFinished() {
+    public boolean shouldTerminate() {
         return !driveBase.isFollowing();
     }
 }

@@ -25,7 +25,7 @@ public class TaskRunner {
 
             if (task.hasStarted()) { // If the task has started, keep updating it
                 task.update();
-                if (task.isFinished()) { // If the task finishes, mark it done
+                if (task.shouldTerminate()) { // If the task terminates, mark it done
                     task.markFinished();
                     activeTasks.remove(task);
                 }

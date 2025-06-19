@@ -27,9 +27,9 @@ public class GroupTask extends Task {
     }
 
     @Override
-    public boolean isFinished() {
+    public boolean shouldTerminate() {
         for (Task task : subTasks) {
-            if (!task.isFinished()) {
+            if (!task.shouldTerminate()) {
                 return false;
             }
         }

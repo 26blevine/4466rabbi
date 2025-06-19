@@ -24,7 +24,7 @@ public class LinearSlideTask extends Task {
     }
 
     @Override
-    public boolean isFinished() {
+    public boolean shouldTerminate() {
         return !slide.isMoving();
     }
 }
