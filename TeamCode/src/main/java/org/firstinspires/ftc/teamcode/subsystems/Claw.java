@@ -14,18 +14,22 @@ public class Claw implements Subsystem {
         MOVING
     }
 
-    private State currentState;
-
+    private final Servo servo;
     private final Gpad gp1;
     private final Gpad gp2;
-    private final Servo servo;
+
+    private State currentState;
+
+    private double target = 0.0;
+    private double previousTarget = 0.0;
+
+    private boolean open = false;
 
     // positions for open and closed states
     private double openPos = 0.0;
     private double closedPos = 1.0;
 
-    // completion tracking (not yet implemented)
-    private double completion = 0.0;
+    private double tolerance = 0.02;
 
     public Claw(Servo servo, Gpad gp1, Gpad gp2) {
         this.servo = servo;
@@ -40,65 +44,60 @@ public class Claw implements Subsystem {
 
     /** Puts the subsystem in the idle state. */
     public void idle() {
+        previousTarget = target;
         setState(State.IDLE);
     }
 
     /** Opens the claw to {@code openPos}. */
     public void open() {
-        servo.setPosition(openPos);
+        previousTarget = servo.getPosition();
+        target = openPos;
+        open = true;
         setState(State.MOVING);
     }
 
     /** Closes the claw to {@code closedPos}. */
     public void close() {
-        servo.setPosition(closedPos);
+        previousTarget = servo.getPosition();
+        target = closedPos;
+        open = false;
         setState(State.MOVING);
     }
 
     /** Convenience toggle between open and closed positions. */
     public void toggle() {
-        if (isOpen()) {
+        if (open) {
             close();
         } else {
             open();
         }
     }
 
-    /** @return true if servo is near {@code openPos}. */
+    /** @return true if the servo is near {@code openPos}. */
     public boolean isOpen() {
-        return Math.abs(servo.getPosition() - openPos) < 0.05;
+        return open;
     }
-
-    public void setOpenPos(double pos) { this.openPos = pos; }
-    public void setClosedPos(double pos) { this.closedPos = pos; }
-    public double getOpenPos() { return openPos; }
-    public double getClosedPos() { return closedPos; }
 
     @Override
     public void update() {
-        // Basic control example: gp1.b closes, gp1.a opens
-        if (gp1.a || gp2.a) {
-            open();
-        } else if (gp1.b || gp2.b) {
-            close();
-        }
-
         switch (currentState) {
-            case MOVING:
-                // Servo movement is instantaneous; add sensor checks here if needed
-                idle();
-                break;
             case IDLE:
                 break;
+            case MOVING:
+                servo.setPosition(target);
+                if (Math.abs(servo.getPosition() - target) <= tolerance) {
+                    idle();
+                }
+                break;
             default:
-                open();
+                idle();
                 break;
         }
     }
 
     @Override
     public double getCompletion() {
-        // TODO: implement completion tracking
-        return completion;
+        // TODO: determine an appropriate completion metric for this subsystem
+        return 0.0;
     }
 }
